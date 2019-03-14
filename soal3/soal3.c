@@ -17,17 +17,17 @@ int main()
         _exit(1);
     }
 
-    // // fork (unzip)
-    // if ( (pid = fork()) == -1) {
-    //     printf("error fork1");
-    //     _exit(1);
-    // }
-    // else if(pid == 0) {
-    //     // this is child
-    //     char *argv[3] = {"unzip", "campur2.zip", NULL};
-    //     execv("/usr/bin/unzip", argv);
-    // }
-    // //parent
+    // fork (unzip)
+    if ( (pid = fork()) == -1) {
+        printf("error fork1");
+        _exit(1);
+    }
+    else if(pid == 0) {
+        char *argv[3] = {"touch", "daftar.txt", NULL};
+        execv("/usr/bin/touch", argv);
+        // this is child
+    }
+    //parent
 
     // fork create file
     if( (pid = fork()) == -1){
@@ -35,9 +35,11 @@ int main()
         _exit(1);
     }
     else if(pid == 0){
-        char *argv[3] = {"touch", "daftar.txt", NULL};
-        execv("/usr/bin/touch", argv);
+        char *argv[3] = {"unzip", "campur2.zip", NULL};
+        execv("/usr/bin/unzip", argv);
     }
+
+    while( (wait(&status)) > 0) ;
 
     if ( (pid = fork()) == -1) {
         printf("error fork3");
@@ -54,13 +56,8 @@ int main()
         _exit(1);
     }
     //parent
-
-    //fork grep
-    if( (pid = fork()) == -1) {
-        printf("error fork4");
-        exit(1);
-    }
-    else if(pid == 0) {
+    else {
+        while( (wait(&status)) > 0) ;
         dup2(_pipe[0], 0);
 
         close(_pipe[0]);
@@ -72,11 +69,10 @@ int main()
             close(file);
             return 1;
         }
-        execlp("/bin/grep", "grep", ".txt", NULL);
+        execlp("/bin/grep", "grep", "\\.txt$", NULL);
         close(file);
         
         _exit(1);
     }
-    //parent
 
 }
