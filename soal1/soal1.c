@@ -34,7 +34,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    if ((chdir("/")) < 0)
+    if ((chdir("/home/fandykun/modul2/soal1/")) < 0)
     {
         exit(EXIT_FAILURE);
     }
@@ -45,13 +45,13 @@ int main()
 
     while (1)
     {
-        FILE *file_txt;
+        struct stat st = {0};
+        if(stat("gambar", &st) == -1)
+            mkdir("gambar", 0775);
+        
         struct dirent *dir;
         DIR *d;
-        d = opendir("/home/fandykun/modul2/");
-        char filename[80];
-        snprintf(filename, 80, "/home/fandykun/modul2/temp.txt");
-        file_txt = fopen(filename, "a");
+        d = opendir("/home/fandykun/modul2/soal1/");
         if (d)
         {
             while ((dir = readdir(d)) != NULL)
@@ -59,7 +59,6 @@ int main()
                 int index = 0;
                 char old_name[256], src[256];
 
-                // fprintf(file_txt, "%s\n", dir->d_name);
                 snprintf(old_name, 256, "%s", dir->d_name);
                 for (int i = 0; i < sizeof(dir->d_name); i++)
                 {
@@ -75,17 +74,14 @@ int main()
                     {
                         old_name[index] = '\0';
                         snprintf(src, 256, "gambar/%s_grey.png", old_name);
-
-                        fprintf(file_txt, "%s : %s : %s\n", old_name, dir->d_name, src);
                         rename(dir->d_name, src);
-                        // execv("/bin/mv", test);
                     }
                 }
             }
             closedir(d);
         }
-        fclose(file_txt);
-        sleep(5);
+
+        sleep(10);
     }
     exit(EXIT_SUCCESS);
 }
