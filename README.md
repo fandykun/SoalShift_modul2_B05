@@ -111,23 +111,22 @@
 > - Bandingkan jika nama user (```pwd->pw_name```) dan nama grup (```grup->gr_name```) sama dengan "www-data". Jika benar sama, maka hapus file elen.ku dengan ```remove("hatiku/elen.ku");```.
 
 3. Diberikan file campur2.zip. Di dalam file tersebut terdapat folder “campur2”. Buatlah program C yang dapat : <br>
-	i)  mengekstrak file zip tersebut. <br>
-	ii) menyimpan daftar file dari folder “campur2” yang memiliki ekstensi .txt ke dalam file daftar.txt.<br> 
+	i)  Mengekstrak file zip tersebut. <br>
+	ii) Menyimpan daftar file dari folder “campur2” yang memiliki ekstensi .txt ke dalam file daftar.txt.<br> 
 Catatan:  
-- Gunakan fork dan exec.
-- Gunakan minimal 3 proses yang diakhiri dengan exec.
-- Gunakan pipe.
-- Pastikan file daftar.txt dapat diakses dari text editor.
+	- Gunakan fork dan exec.
+	- Gunakan minimal 3 proses yang diakhiri dengan exec.
+	- Gunakan pipe.
+	- Pastikan file daftar.txt dapat diakses dari text editor.
 
 4. Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik). Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.<br>
-<br>
-Contoh: <br>
-File makan_enak.txt terakhir dibuka pada detik ke-1. <br>
-Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt.<br>
-<br>
-Catatan: <br>
-- Dilarang menggunakan crontab
-- Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst
+Contoh:
+	- File makan_enak.txt terakhir dibuka pada detik ke-1.
+	- Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt.
+	
+	Catatan:
+	- Dilarang menggunakan crontab
+	- Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst
 
 > ### Penjelasan
 > 
