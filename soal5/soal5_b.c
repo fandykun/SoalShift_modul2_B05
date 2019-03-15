@@ -1,4 +1,6 @@
+#include <signal.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 int main()
@@ -12,10 +14,8 @@ int main()
     }
 
     fscanf(fpid, "%d", &pid);
-
-    char *argv[3] = {"kill", pid, NULL};
-
-    execv("/bin/kill", argv);
-
+    char kode[10];
+    snprintf(kode, 10, "%d", pid);
+    kill(pid, SIGTERM);
     return 0;
 }
