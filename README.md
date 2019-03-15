@@ -23,7 +23,6 @@ Karena tidak diperbolehkan menggunakan ```crontab```, dan proses menghapus file 
 #include <unistd.h>
 #include <syslog.h>
 #include <string.h>
-include <time.h>
  
 #include <pwd.h>
 #include <grp.h>
@@ -131,8 +130,124 @@ Contoh:
 	- Dilarang menggunakan crontab
 	- Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst
 
-### Penjelasan
+### Jawaban
+```bash
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <string.h>
+#include <time.h>
 
+int main()
+{
+    pid_t pid, sid;
+    pid = fork();
+
+    // If pid < 0, fork failed
+    if (pid < 0)
+    {
+	exit(EXIT_FAILURE);
+    }
+
+    /* 
+    If pid > 0, it's the parent.
+    In order to make a daemon,
+    terminate the parent process
+    */
+    if (pid > 0)
+    {
+	exit(EXIT_SUCCESS);
+    }
+
+    /*
+    Set file mode so it can be 
+    written and read properly
+    */
+    umask(0);
+    
+    // Create an unique SID
+    sid = setsid();
+    if (sid < 0)
+    {
+	exit(EXIT_FAILURE);
+    }
+
+    /*
+    Change directory
+    Must be an active and
+    always exists directory
+    */
+    if ((chdir("/home/abraham")) < 0)
+    {
+	exit(EXIT_FAILURE);
+    }
+
+    
+    // Close the standard file descriptor
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    // Main program
+    
+    int count = 1;
+    while(1)
+    {
+	// Check if makan_enak.txt has been recently accessed
+	// Call a function stat() to return information about 
+	// a file
+	struct stat attrib;
+	stat("Documents/makanan/makan_enak.txt", &attrib);
+	    
+	// attrib will check the attribute / information of
+	// makan_enak.txt, if makan_enak.txt is being accessed,
+	// then record the time with variable enak
+	time_t enak = attrib.st_atime;
+	    
+	// Check what time is it now with time()
+	time_t sehat = time(NULL);
+	    
+	// If makan_enak.txt is being accessed in a certain
+	// 30 seconds, then make a new file named makan_sehat#.txt
+	if(difftime(sehat, enak) <= 30)
+	{		
+	    char num[10];
+	    sprintf(num, "%d", count);
+
+	    char filename[1000] = "/home/abraham/Documents/makanan/makan_sehat";
+	    char ext[] = ".txt";
+
+	    strcat(filename, num);
+	    strcat(filename, ext);
+	    FILE *fPtr = fopen(filename, "w");
+
+	    fprintf(fPtr, "Kalau diet yang bener\n");
+	    fclose(fPtr);
+		
+	    count++;
+	}
+
+	sleep(5);
+    }
+
+    exit(EXIT_SUCCESS);
+
+}
+```
+#### Penjelasan 
+- ```#include <time.h>``` merupakan library untuk mengecek waktu saat ini dihitung dari sejak<a href="https://en.wikipedia.org/wiki/Unix_time"> Epoch dari linux</a>.
+- Fungsi dari struct ```struct stat attrib``` adalah untuk mengecek atribut dari sebuah file / direktori. Disini kita mengecek file makan_enak.txt, sehingga seluruh atribut file makan_enak.txt akan direkam oleh attrib menggunakan fungsi ```stat()```.
+- Dalam fungsi ```stat("Documents/makanan/makan_enak.txt", &attrib);``` sebelumnya, terdapat berbagai info / atribut dari file makan_enak.txt, termasuk terakhir kali diaksesnya file tersebut, yang dapat diakses dengan atribut struct ```attrib.st_atime```, bertipe data time_t. Deklarasikan variabel enak untuk menampung elemen ini.
+- Deklarasikan variabel bertipe data time_t dengan nama sehat, yang mengecek waktu saat program dijalankan.
+- Jika file makan_enak.txt telah dibuka setidaknya 30 detik yang lalu, maka **sehat** - **enak** bernilai kurang dari 30. Selama selang waktu itu, jalankan program dalam if.
+- ```sprintf(num, "%d", count)``` digunakan untuk mengubah data dengan tipe data ```int``` menjadi ```char[]```. Sekarang, isi dari ```num``` adalah bentuk string dari count.
+- Untuk membuat file makan_enak#.txt, terlebih dahulu tentukan ***absolute path*** dari file yang akan dibuat. <br>Deklarasikan sebuah variabel bertipe data ```char[]``` yang cukup besar, bernama **filename**. Isi dengan absolute path dari file yang akan dibuat (belum termasuk ekstensinya).<br>Setelah itu, gabungkan absolute path dengan angka dari nama file tersebut dengan ```strcat(filename, num);```<br>Gabungkan dengan ekstensinya dengan ```strcat(filename, ".txt");```, atau bisa juga dengan mendeklarasikannya menjadi suatu variabel bernama **ext**, dan menggabungkannya dengan ```strcat(filename, ext);```.
+- Buat sebuah file dengan nama file **filename** dengan terlebih dahulu menentukan pointer dari file, yang bernama **fPtr**, buka file dengan fungsi ```fopen(filename, "w");```.<br>Tuliskan sesuatu di dalam file dengan fungsi ```fprintf(fPtr, "Pesan disini");```.<br>Jangan lupa untuk menutup pointer file dengan ```fclose(fPtr);```.
 
 5. Kerjakan poin a dan b di bawah:<br>
 Buatlah program c untuk mencatat log setiap menit dari file log pada syslog ke /home/[user]/log/[dd:MM:yyyy-hh:mm]/log#.log<br>
