@@ -14,8 +14,6 @@ int main()
     }
 
     fscanf(fpid, "%d", &pid);
-    char kode[10];
-    snprintf(kode, 10, "%d", pid);
     kill(pid, SIGTERM);
     return 0;
 }

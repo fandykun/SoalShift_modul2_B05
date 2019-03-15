@@ -13,6 +13,7 @@ int main()
 {
     pid_t pid, sid;
     int log_inc = 1;
+    int run_time = 0;
 
     pid = fork();
 
@@ -59,13 +60,19 @@ int main()
         char log_name[100];
 
         snprintf(date, 100, "%02d:%02d:%04d-%02d:%02d", time.tm_mday, time.tm_mon + 1, time.tm_year + 1900, time.tm_hour, time.tm_min);
-        snprintf(directory, 100, "/home/fandykun/modul2/%s", date);
-
+        if(log_inc == 1)
+            snprintf(directory, 100, "/home/fandykun/modul2/%s", date);
+        
         struct stat st = {0};
-            if (stat(directory, &st) == -1 && chdir(directory) < 0){
-                mkdir(directory, 0775);
-                chdir(directory);
-            }
+        if(run_time >= 1800){
+            snprintf(directory, 100, "/home/fandykun/modul2/%s", date);
+            run_time = 0;
+        }
+
+        if (stat(directory, &st) == -1 && chdir(directory) < 0){
+            mkdir(directory, 0775);
+            chdir(directory);
+        }
 
         snprintf(log_name, 100, "%s/log%d.log", directory, log_inc++);
 
@@ -81,7 +88,8 @@ int main()
         fclose(flog);
         fclose(fdst);
 
-        sleep(20);
+        run_time +=60;
+        sleep(60);
     }
 
     exit(EXIT_SUCCESS);
