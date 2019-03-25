@@ -52,7 +52,7 @@ int main()
     Must be an active and
     always exists directory
     */
-    if ((chdir("/home/abraham")) < 0)
+    if ((chdir("/home/abraham/Downloads/SoalShift_modul2_B05-master/soal2/")) < 0)
     {
 	exit(EXIT_FAILURE);
     }
@@ -74,19 +74,20 @@ int main()
 	struct stat attrib;
 	struct group *grup;
 	struct passwd *pwd;
-	stat("hatiku/elen.ku", &attrib);
-	
-	chmod("hatiku/elen.ku", 777);
-	
-	userID = attrib.st_uid;
-	groupID = attrib.st_gid;
-	
-	grup = getgrgid(groupID);
-	pwd = getpwuid(userID);
-	
-	if (!(strcmp(pwd->pw_name, "www-data")) && !(strcmp(grup->gr_name, "www-data")))
-	{	    
-	    remove("hatiku/elen.ku");
+	if (stat("hatiku/elen.ku", &attrib) == 0)
+	{
+		if (chmod("hatiku/elen.ku", 777) == -1);
+		
+		userID = attrib.st_uid;
+		groupID = attrib.st_gid;
+		
+		grup = getgrgid(groupID);
+		pwd = getpwuid(userID);
+		
+		if (!(strcmp(pwd->pw_name, "www-data")) && !(strcmp(grup->gr_name, "www-data")))
+		{	    
+		    remove("hatiku/elen.ku");
+		}
 	}
 	sleep(3);
     }
