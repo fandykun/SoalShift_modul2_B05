@@ -49,7 +49,7 @@ int main()
     Must be an active and
     always exists directory
     */
-    if ((chdir("/home/abraham")) < 0)
+    if ((chdir("/home/abraham/Downloads/SoalShift_modul2_B05-master/soal4/")) < 0)
     {
 	exit(EXIT_FAILURE);
     }
@@ -69,36 +69,36 @@ int main()
 	// Call a function stat() to return information about 
 	// a file
 	struct stat attrib;
-	stat("Documents/makanan/makan_enak.txt", &attrib);
-	    
-	// attrib will check the attribute / information of
-	// makan_enak.txt, if makan_enak.txt is being accessed,
-	// then record the time with variable enak
-	time_t enak = attrib.st_atime;
-	    
-	// Check what time is it now with time()
-	time_t sehat = time(NULL);
-	    
-	// If makan_enak.txt is being accessed in a certain
-	// 30 seconds, then make a new file named makan_sehat#.txt
-	if(difftime(sehat, enak) <= 30)
-	{		
-	    char num[10];
-	    sprintf(num, "%d", count);
+	if (stat("/home/abraham/Documents/makanan/makan_enak.txt", &attrib) == 0)
+	{    
+		// attrib will check the attribute / information of
+		// makan_enak.txt, if makan_enak.txt is being accessed,
+		// then record the time with variable enak
+		time_t enak = attrib.st_atime;
+		    
+		// Check what time is it now with time()
+		time_t sehat = time(NULL);
+		    
+		// If makan_enak.txt is being accessed in a certain
+		// 30 seconds, then make a new file named makan_sehat#.txt
+		if(difftime(sehat, enak) <= 30)
+		{		
+		    char num[10];
+		    sprintf(num, "%d", count);
 
-	    char filename[1000] = "/home/abraham/Documents/makanan/makan_sehat";
-	    char ext[] = ".txt";
+		    char filename[1000] = "/home/abraham/Documents/makanan/makan_sehat";
+		    char ext[] = ".txt";
 
-	    strcat(filename, num);
-	    strcat(filename, ext);
-	    FILE *fPtr = fopen(filename, "w");
+		    strcat(filename, num);
+		    strcat(filename, ext);
+		    FILE *fPtr = fopen(filename, "w");
 
-	    fprintf(fPtr, "Kalau diet yang bener\n");
-	    fclose(fPtr);
-		
-	    count++;
+		    fprintf(fPtr, "Kalau diet yang bener\n");
+		    fclose(fPtr);
+			
+		    count++;
+		}
 	}
-
 	sleep(5);
     }
 
